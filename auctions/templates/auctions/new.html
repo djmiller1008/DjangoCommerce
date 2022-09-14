@@ -2,6 +2,16 @@
 
 {% block body %}
 
-<h1>This is the create new listing page!</h1>
+<div class="page-wrapper">
+    <h1>New Listing</h1>
 
+    <form class="form" action="{% url 'new' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <p>
+            <input class="btn btn-primary" value="Create Listing" type="submit">
+        </p>
+    </form>
+</div>
+ 
 {% endblock %}
