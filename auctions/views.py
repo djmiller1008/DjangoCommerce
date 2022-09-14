@@ -1,3 +1,4 @@
+
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -6,7 +7,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-from .models import User
+from .models import Listing, User
 
 
 def index(request):
@@ -70,6 +71,29 @@ def register(request):
 
 @login_required(login_url='login') 
 def new(request):
+    if request.method == "POST":
+        form = NewListingForm(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            description = form.cleaned_data['description']
+            starting_bid = form.cleaned_data['starting_bid']
+            image = form.cleaned_data['image']
+            category = form.cleaned_data['category']
+            user = request.user
+            new_listing = Listing(title=title,
+                                    description=description,
+                                    starting_bid=starting_bid,
+                                    image=image,
+                                    category=category,
+                                    user=user)
+            new_listing.save()
+
+            return HttpResponseRedirect(reverse("index"))
+        else:
+            return render(request, "auction/new.html", {
+                "message": "Invalid Submission"
+            })
+
     return render(request, "auctions/new.html", {
         "form": NewListingForm()
     })
