@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
+from django import forms
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -63,6 +64,21 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
+
+
+
+
 @login_required(login_url='login') 
 def new(request):
-    return render(request, "auctions/new.html")
+    return render(request, "auctions/new.html", {
+        "form": NewListingForm()
+    })
+
+
+class NewListingForm(forms.Form):
+    title = forms.CharField(label = 'Title', widget=forms.TextInput(attrs={'class': "form-control"}))
+    description = forms.CharField(widget=forms.Textarea(attrs={'class': "form-control"}))
+    starting_bid = forms.IntegerField(min_value=1, widget=forms.TextInput(attrs={'class': "form-control"}))
+    image = forms.ImageField(required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    category = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    
