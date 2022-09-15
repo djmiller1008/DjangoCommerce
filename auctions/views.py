@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-from .models import Listing, User
+from .models import Category, Listing, User
 
 
 def index(request):
@@ -80,7 +80,7 @@ def new(request):
             description = form.cleaned_data['description']
             starting_bid = form.cleaned_data['starting_bid']
             image = form.cleaned_data['image_url']
-            category = form.cleaned_data['category']
+            category = Category.objects.get(name=request.POST['category'])
             user = request.user
             new_listing = Listing(title=title,
                                     description=description,
@@ -94,11 +94,13 @@ def new(request):
         else:
             return render(request, "auctions/new.html", {
                 "message": "Invalid Submission",
-                "form": NewListingForm()
+                "form": NewListingForm(),
+                "categories": Category.objects.all()
             })
 
     return render(request, "auctions/new.html", {
-        "form": NewListingForm()
+        "form": NewListingForm(),
+        "categories": Category.objects.all()
     })
 
 
@@ -107,5 +109,5 @@ class NewListingForm(forms.Form):
     description = forms.CharField(widget=forms.Textarea(attrs={'class': "form-control"}))
     starting_bid = forms.IntegerField(min_value=1, widget=forms.TextInput(attrs={'class': "form-control"}))
     image_url = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
-    category = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    
     
