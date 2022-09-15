@@ -11,7 +11,9 @@ from .models import Listing, User
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    return render(request, "auctions/index.html", {
+        'listings': Listing.objects.all()
+    })
 
 
 def login_view(request):
@@ -77,7 +79,7 @@ def new(request):
             title = form.cleaned_data['title']
             description = form.cleaned_data['description']
             starting_bid = form.cleaned_data['starting_bid']
-            image = form.cleaned_data['image']
+            image = form.cleaned_data['image_url']
             category = form.cleaned_data['category']
             user = request.user
             new_listing = Listing(title=title,
@@ -90,8 +92,9 @@ def new(request):
 
             return HttpResponseRedirect(reverse("index"))
         else:
-            return render(request, "auction/new.html", {
-                "message": "Invalid Submission"
+            return render(request, "auctions/new.html", {
+                "message": "Invalid Submission",
+                "form": NewListingForm()
             })
 
     return render(request, "auctions/new.html", {
@@ -103,6 +106,6 @@ class NewListingForm(forms.Form):
     title = forms.CharField(label = 'Title', widget=forms.TextInput(attrs={'class': "form-control"}))
     description = forms.CharField(widget=forms.Textarea(attrs={'class': "form-control"}))
     starting_bid = forms.IntegerField(min_value=1, widget=forms.TextInput(attrs={'class': "form-control"}))
-    image = forms.ImageField(required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
+    image_url = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
     category = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': "form-control"}))
     
