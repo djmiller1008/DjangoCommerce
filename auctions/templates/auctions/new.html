@@ -11,6 +11,14 @@
         {% csrf_token %}
         {{ form.as_p }}
         <p>
+            <select name="category" class="form-control">
+                <option value="" disabled selected>Select Category</option>
+                {% for category in categories %}
+                    <option value="{{ category.name }}">{{ category.name }}</option>
+                {% endfor %}  
+            </select>
+        </p>
+        <p>
             <input class="btn btn-primary" value="Create Listing" type="submit">
         </p>
     </form>
