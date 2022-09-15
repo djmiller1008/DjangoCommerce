@@ -1,5 +1,6 @@
 body {
     padding: 10px;
+    font-family: sans-serif;
 }
 
 .page-wrapper {
@@ -16,4 +17,31 @@ p {
 
 .form {
     width: 50%;
+}
+
+.listing-container {
+    display: flex;
+    border: .5px solid black;
+    height: 15rem;
+    margin-bottom: 1rem;
+}
+
+.home-page-image {
+    height: 200px;
+    width: 200px;
+    margin-left: 3rem;
+}
+
+.home-page-listing-info {
+    margin-left: 3rem;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.created-at {
+    margin-bottom: 1rem;
+    font-size: .8rem;
+
 }
