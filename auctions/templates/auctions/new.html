@@ -7,7 +7,7 @@
 
     <span>{{ message }}</span>
 
-    <form class="form" action="{% url 'new' %}" method="post">
+    <form class="form" action="{% url 'commerce:new' %}" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <p>
