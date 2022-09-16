@@ -1,0 +1,26 @@
+{% extends "auctions/layout.html" %} 
+
+{% block body %} 
+
+    <h1>{{ category }}</h1>
+
+    <h2>Active Listings</h2>
+
+    {% for listing in listings %}
+        <div class="listing-container">
+            {% if listing.image != "" %}
+                <img class="home-page-image" src="{{ listing.image }}" />
+            {% endif %}
+            <section class="home-page-listing-info">
+                <section>
+                    <h3>{{ listing.title }}</h3>
+                    <span>Price: ${{ listing.starting_bid }}</span>
+                </section>
+                <span class="created-at">Created At: {{ listing.created_at }}</span>
+            </section>
+        </div>
+        {% empty %} 
+            <span>No Active Listings</span>
+    {% endfor %}
+
+{% endblock %}
