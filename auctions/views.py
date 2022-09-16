@@ -90,7 +90,7 @@ def new(request):
                                     user=user)
             new_listing.save()
 
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(reverse("commerce:index"))
         else:
             return render(request, "auctions/new.html", {
                 "message": "Invalid Submission",
@@ -121,4 +121,10 @@ def category(request, category):
     return render(request, "auctions/category.html", {
         "category": Category.objects.get(name=category),
         "listings": Category.objects.get(name=category).listings.all()
+    })
+
+def listing(request, id):
+    return render(request, "auctions/listing.html", {
+        "listing": Listing.objects.get(pk=id)
+
     })
