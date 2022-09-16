@@ -32,8 +32,15 @@ p {
     margin-left: 3rem;
 }
 
-.home-page-listing-info {
+.listing-page-image {
+    height: 250px;
+    width: 300px;
     margin-left: 3rem;
+    margin-top: 2rem;
+}
+
+.home-page-listing-info {
+    margin-left: 2rem;
     margin-top: 1rem;
     display: flex;
     flex-direction: column;
@@ -43,5 +50,13 @@ p {
 .created-at {
     margin-bottom: 1rem;
     font-size: .8rem;
+}
 
+.listing-wrapper {
+    margin-left: 1rem;
+}
+
+.bid {
+    font-size: 2rem;
+    margin-top: .5rem;
 }
