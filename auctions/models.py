@@ -14,6 +14,7 @@ class Listing(models.Model):
     title = models.CharField(max_length=20)
     description = models.CharField(max_length=300)
     starting_bid = models.PositiveIntegerField()
+    current_bid = models.PositiveBigIntegerField()
     image = models.CharField(max_length=200)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="listings")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
@@ -23,5 +24,9 @@ class Listing(models.Model):
         return f"{self.title}: {self.description}"
 
 
-
+class Bid(models.Model):
+    listing = models.ForeignKey(Listing, on_delete=models.PROTECT, related_name="bids")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
+    amount = models.PositiveIntegerField()
+    
     
