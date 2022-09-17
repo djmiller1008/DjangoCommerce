@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-from .models import Category, Listing, User
+from .models import Category, Listing, User, Bid
 
 
 def index(request):
@@ -85,6 +85,7 @@ def new(request):
             new_listing = Listing(title=title,
                                     description=description,
                                     starting_bid=starting_bid,
+                                    current_bid=starting_bid,
                                     image=image,
                                     category=category,
                                     user=user)
@@ -124,7 +125,42 @@ def category(request, category):
     })
 
 def listing(request, id):
+    listing = Listing.objects.get(pk=id)
+    user = listing.user
     return render(request, "auctions/listing.html", {
-        "listing": Listing.objects.get(pk=id)
+        "listing": listing,
+        "form": NewBidForm(),
+        "user": user
 
     })
+
+class NewBidForm(forms.Form):
+    amount = forms.IntegerField(min_value=1, widget=forms.TextInput(attrs={'class': "form-control", 'placeholder': "Bid"}))
+
+    def __init__(self, *args, **kwargs):
+        super(NewBidForm, self).__init__(*args, **kwargs)
+        self.fields['amount'].label = ""
+
+
+
+def bid(request, listing_id):
+    form = NewBidForm(request.POST)
+    if form.is_valid():
+        amount = form.cleaned_data['amount']
+        listing = Listing.objects.get(pk=listing_id)
+        if amount < listing.current_bid:
+            return render(request, "auctions/listing.html", {
+                "listing": listing,
+                "form": NewBidForm,
+                "message": "Your bid must be higher than the current bid"
+            })
+
+        listing.current_bid = amount
+        listing.save()
+        user = request.user
+        
+        new_bid = Bid(amount=amount,
+                        user=user,
+                        listing=listing)
+        new_bid.save()
+        return HttpResponseRedirect(reverse('commerce:listing', kwargs={'id': listing.id}))
