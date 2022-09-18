@@ -14,7 +14,7 @@
             <section class="home-page-listing-info">
                 <section>
                     <h3><a href="{% url 'commerce:listing' listing.id %}">{{ listing.title }}</a></h3>
-                    <span>Price: ${{ listing.starting_bid }}</span>
+                    <span>Price: ${{ listing.current_bid }}</span>
                 </section>
                 <span class="created-at">Created At: {{ listing.created_at }}</span>
             </section>
