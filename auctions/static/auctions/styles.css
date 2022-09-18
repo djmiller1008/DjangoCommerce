@@ -15,6 +15,15 @@ p {
     align-items: center;
 }
 
+.bid-form {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+}
+
+.bid-button {
+    margin-top: 1rem;
+}
 .form {
     width: 50%;
 }
@@ -24,6 +33,7 @@ p {
     border: .5px solid black;
     height: 15rem;
     margin-bottom: 1rem;
+    padding-top: 1rem;
 }
 
 .home-page-image {
@@ -35,8 +45,9 @@ p {
 .listing-page-image {
     height: 250px;
     width: 300px;
-    margin-left: 3rem;
-    margin-top: 2rem;
+    margin-left: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
 .home-page-listing-info {
@@ -54,9 +65,20 @@ p {
 
 .listing-wrapper {
     margin-left: 1rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .bid {
     font-size: 2rem;
     margin-top: .5rem;
+}
+
+.bids-span {
+    font-size: .8rem;
+}
+
+.listing-details-section {
+    display: flex;
+    flex-direction: column;
 }
