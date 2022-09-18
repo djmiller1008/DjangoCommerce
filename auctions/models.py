@@ -1,3 +1,4 @@
+from pickle import TRUE
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -5,7 +6,7 @@ class User(AbstractUser):
     pass
 
 class Category(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=20, blank=TRUE, null=TRUE)
 
     def __str__(self):
         return f"{self.name}"
@@ -16,7 +17,7 @@ class Listing(models.Model):
     starting_bid = models.PositiveIntegerField()
     current_bid = models.PositiveBigIntegerField()
     image = models.CharField(max_length=200)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="listings")
+    category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="listings", null=TRUE, blank=TRUE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listings")
     created_at = models.DateTimeField(auto_now_add=True)
 
