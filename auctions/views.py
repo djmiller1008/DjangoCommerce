@@ -80,7 +80,10 @@ def new(request):
             description = form.cleaned_data['description']
             starting_bid = form.cleaned_data['starting_bid']
             image = form.cleaned_data['image_url']
-            category = Category.objects.get(name=request.POST['category'])
+            if 'category' not in request.POST:
+                category = Category.objects.get(name='None')
+            else:
+                category = Category.objects.get(name=request.POST['category'])
             user = request.user
             new_listing = Listing(title=title,
                                     description=description,
@@ -126,12 +129,79 @@ def category(request, category):
 
 def listing(request, id):
     listing = Listing.objects.get(pk=id)
-    user = listing.user
+    listing_user = listing.user
+    bids_no = listing.bids.count()
+    
+    category = listing.category
+
+    if request.method == 'POST':
+        form = NewBidForm(request.POST)
+        if form.is_valid():
+            amount = form.cleaned_data['amount']
+            listing = Listing.objects.get(pk=id)
+
+            if amount <= listing.current_bid and bids_no > 0:
+                return render(request, "auctions/listing.html", {
+                    "listing": listing,
+                    "form": NewBidForm(),
+                    "listing_user": listing_user, 
+                    "bids": bids_no,
+                    "category": category,
+                    "bidding_user": request.user, 
+                    "message": "Your bid must be higher than the current bid"
+                })
+            
+            if amount < listing.current_bid:
+                return render(request, "auctions/listing.html", {
+                    "listing": listing,
+                    "form": NewBidForm(),
+                    "listing_user": listing_user, 
+                    "bids": bids_no,
+                    "category": category,
+                    "bidding_user": request.user, 
+                    "message": "Your bid must be higher than the original price"
+                })
+
+            listing.current_bid = amount
+            listing.save()
+            user = request.user
+            
+            new_bid = Bid(amount=amount,
+                            user=user,
+                            listing=listing)
+            new_bid.save()
+            bids_no = listing.bids.count()
+
+            if bids_no > 0:
+                bidding_user = listing.bids.latest('amount').user
+                if bidding_user == request.user:
+                    bidding_user = "You have the highest bid"
+            else:
+                bidding_user = "No bidder yet"
+
+            return render(request, "auctions/listing.html", {
+                    "listing": listing,
+                    "form": NewBidForm(),
+                    "listing_user": listing_user, 
+                    "bids": bids_no,
+                    "category": category,
+                    "bidding_user": bidding_user
+                })
+
+    if bids_no > 0:
+        bidding_user = listing.bids.latest('amount').user
+        if bidding_user == request.user:
+                bidding_user = "You have the highest bid"
+    else:
+        bidding_user = "No bidder yet"
+    
     return render(request, "auctions/listing.html", {
         "listing": listing,
         "form": NewBidForm(),
-        "user": user
-
+        "listing_user": listing_user, 
+        "bids": bids_no,
+        "category": category,
+        "bidding_user": bidding_user
     })
 
 class NewBidForm(forms.Form):
@@ -142,25 +212,3 @@ class NewBidForm(forms.Form):
         self.fields['amount'].label = ""
 
 
-
-def bid(request, listing_id):
-    form = NewBidForm(request.POST)
-    if form.is_valid():
-        amount = form.cleaned_data['amount']
-        listing = Listing.objects.get(pk=listing_id)
-        if amount < listing.current_bid:
-            return render(request, "auctions/listing.html", {
-                "listing": listing,
-                "form": NewBidForm,
-                "message": "Your bid must be higher than the current bid"
-            })
-
-        listing.current_bid = amount
-        listing.save()
-        user = request.user
-        
-        new_bid = Bid(amount=amount,
-                        user=user,
-                        listing=listing)
-        new_bid.save()
-        return HttpResponseRedirect(reverse('commerce:listing', kwargs={'id': listing.id}))
