@@ -5,7 +5,26 @@
         <h2>Listing: {{ listing.title }}</h2>
         <img class="listing-page-image" src="{{ listing.image }}"/>
         <section>{{ listing.description }}</section>
-        <strong class="bid">${{ listing.starting_bid }}</strong>
+        <strong class="bid">${{ listing.current_bid }}</strong>
+        {% if message != NULL %} 
+            <span class="alert alert-danger">{{ message }}</span>
+        {% endif %}  
+        <span class="bids-span">{{ bids }} bid(s) so far.</span>
+        <span class="bids-span">Current bidder: {{ bidding_user }}</span>
+        <form class="bid-form" action="{% url 'commerce:listing' listing.id %}" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <input class="btn btn-primary bid-button" type="submit" value="Place Bid">
+        </form>
+
+        <section class="listing-details-section">
+            <h3><strong>Details</strong></h3>
+            <ul>
+                <li>Listed by: {{ listing_user.username }}</li>
+                <li>Category: {{ category }}</li>
+            </ul>
+           
+        </section>
     </div>
     
 
