@@ -1,0 +1,20 @@
+{% extends 'auctions/layout.html' %} 
+
+{% block body %}
+    <h2>My Watchlist</h2>
+
+    {% for listing in listings %}
+        <div class="listing-container">
+            {% if listing.image != "" %}
+                <img class="home-page-image" src="{{ listing.image }}" />
+            {% endif %}
+            <section class="home-page-listing-info">
+                <section>
+                    <h3><a href="{% url 'commerce:listing' listing.id %}">{{ listing.title }}</a></h3>
+                    <span>Price: ${{ listing.current_bid }}</span>
+                </section>
+                <span class="created-at">Created At: {{ listing.created_at }}</span>
+            </section>
+        </div>
+    {% endfor %}
+{% endblock %}
