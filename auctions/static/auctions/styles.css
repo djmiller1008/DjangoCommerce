@@ -9,6 +9,11 @@ body {
     align-items: center;
 }
 
+.flex-section {
+    display: flex;
+    align-items: center;
+}
+
 p {
     display: flex;
     flex-direction: column;
@@ -81,4 +86,20 @@ p {
 .listing-details-section {
     display: flex;
     flex-direction: column;
+}
+
+.add-to-watchlist-button {
+    border: none;
+    background: gray;
+    color: white;
+    font-weight: 700;
+    border-radius: 3px;
+    font-size: .8rem;
+    margin-left: 1rem;
+    margin-bottom: .2rem;
+   
+}
+
+.add-to-watchlist-button:hover {
+    color: black;
 }
