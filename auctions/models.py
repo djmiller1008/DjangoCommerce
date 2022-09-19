@@ -1,4 +1,5 @@
 
+from tkinter import CASCADE
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -26,8 +27,10 @@ class Listing(models.Model):
 
 
 class Bid(models.Model):
-    listing = models.ForeignKey(Listing, on_delete=models.PROTECT, related_name="bids")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="bids")
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids")
     amount = models.PositiveIntegerField()
     
-    
+class Watchlist(models.Model):
+    listing=models.ForeignKey(Listing, on_delete=models.CASCADE, related_name="watchlist")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlist")
