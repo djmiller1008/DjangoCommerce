@@ -2,7 +2,14 @@
 
 {% block body %}
     <div class="listing-wrapper">
-        <h2>Listing: {{ listing.title }}</h2>
+        <section class="flex-section">
+            <h2>Listing: {{ listing.title }}</h2>
+            <form action="{% url 'commerce:toggle_watchlist' listing.id %}" method="post">
+                {% csrf_token %} 
+                <input class="add-to-watchlist-button" type="submit" value="{{ watchlist }}">
+            </form>
+        </section>
+        
         <img class="listing-page-image" src="{{ listing.image }}"/>
         <section>{{ listing.description }}</section>
         <strong class="bid">${{ listing.current_bid }}</strong>
