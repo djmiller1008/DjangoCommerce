@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-from .models import Category, Listing, User, Bid
+from .models import Category, Listing, User, Bid, Watchlist
 
 
 def index(request):
@@ -134,6 +134,13 @@ def listing(request, id):
     
     category = listing.category
 
+    watchlist_item = request.user.watchlist.filter(listing=listing)
+    
+    if not watchlist_item:
+        watchlist = 'Add To Watchlist'
+    else:
+        watchlist = 'Remove From Watchlist'
+
     if request.method == 'POST':
         form = NewBidForm(request.POST)
         if form.is_valid():
@@ -148,7 +155,8 @@ def listing(request, id):
                     "bids": bids_no,
                     "category": category,
                     "bidding_user": request.user, 
-                    "message": "Your bid must be higher than the current bid"
+                    "message": "Your bid must be higher than the current bid",
+                    "watchlist": watchlist
                 })
             
             if amount < listing.current_bid:
@@ -159,7 +167,8 @@ def listing(request, id):
                     "bids": bids_no,
                     "category": category,
                     "bidding_user": request.user, 
-                    "message": "Your bid must be higher than the original price"
+                    "message": "Your bid must be higher than the original price",
+                    "watchlist": watchlist
                 })
 
             listing.current_bid = amount
@@ -185,7 +194,8 @@ def listing(request, id):
                     "listing_user": listing_user, 
                     "bids": bids_no,
                     "category": category,
-                    "bidding_user": bidding_user
+                    "bidding_user": bidding_user,
+                    "watchlist": watchlist
                 })
 
     if bids_no > 0:
@@ -201,7 +211,8 @@ def listing(request, id):
         "listing_user": listing_user, 
         "bids": bids_no,
         "category": category,
-        "bidding_user": bidding_user
+        "bidding_user": bidding_user,
+        "watchlist": watchlist
     })
 
 class NewBidForm(forms.Form):
@@ -211,4 +222,28 @@ class NewBidForm(forms.Form):
         super(NewBidForm, self).__init__(*args, **kwargs)
         self.fields['amount'].label = ""
 
+@login_required
+def toggle_watchlist(request, listing_id):
+    user = request.user
+    listing = Listing.objects.get(pk=listing_id)
 
+    watchlist_item = request.user.watchlist.filter(listing=listing)
+    
+    if not watchlist_item:
+        watchlist_item = Watchlist(listing=listing, user=user)
+        watchlist_item.save()
+        return HttpResponseRedirect(reverse('commerce:listing', kwargs={'id': listing_id}))
+    else:
+        watchlist_item.delete()
+        return HttpResponseRedirect(reverse('commerce:listing', kwargs={'id': listing_id}))
+
+@login_required
+def watchlist(request):
+    watchlist_items = request.user.watchlist.all()
+    listings = []
+    for item in watchlist_items:
+        listings.append(item.listing)
+
+    return render(request, 'auctions/watchlist.html', {
+        "listings": listings
+    })
