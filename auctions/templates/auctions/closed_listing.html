@@ -1,0 +1,14 @@
+{% extends 'auctions/layout.html' %} 
+
+{% block body %} 
+    <div class="listing-wrapper">
+        <h2>Listing: {{ listing.title }}</h2>
+
+        <img class="listing-page-image" src="{{ listing.image }}"/>
+        <section>{{ listing.description }}</section>
+        <strong class="bid">Sold for ${{ listing.current_bid }} to {{ winning_user }}</strong>
+        {% if winner %} 
+            <span><strong>Congratulations! You won the auction!</strong></span>
+        {% endif %} 
+        
+{% endblock %} 
