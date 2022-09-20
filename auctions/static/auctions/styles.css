@@ -26,7 +26,7 @@ p {
 
 }
 
-.bid-button {
+.button-margin {
     margin-top: 1rem;
 }
 .form {
@@ -97,9 +97,47 @@ p {
     font-size: .8rem;
     margin-left: 1rem;
     margin-bottom: .2rem;
+    height: 1.5rem;
+    width: 10rem;
    
 }
 
 .add-to-watchlist-button:hover {
+    color: black;
+}
+
+.comment-form {
+    height: 5rem !important;
+}
+
+.comment-container {
+    border: .5px solid lightgray;
+    border-radius: 5px;
+    height: 4rem;
+    margin-bottom: 1rem;
+    padding-top: .5rem;
+    padding-left: .5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.comment-author {
+    font-size: .75rem;
+}
+
+.close-listing {
+    background: red;
+    color: white;
+    font-size: .85rem;
+    font-weight: 700;
+    border-radius: 3px;
+    border: none;
+    margin-left: 1rem;
+    height: 1.5rem;
+    width: 10rem;
+}
+
+.close-listing:hover {
     color: black;
 }
