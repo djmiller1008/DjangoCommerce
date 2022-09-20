@@ -4,10 +4,18 @@
     <div class="listing-wrapper">
         <section class="flex-section">
             <h2>Listing: {{ listing.title }}</h2>
-            <form action="{% url 'commerce:toggle_watchlist' listing.id %}" method="post">
-                {% csrf_token %} 
-                <input class="add-to-watchlist-button" type="submit" value="{{ watchlist }}">
-            </form>
+            {% if not_signed_in == False %}
+                <form action="{% url 'commerce:toggle_watchlist' listing.id %}" method="post">
+                    {% csrf_token %} 
+                    <input class="add-to-watchlist-button" type="submit" value="{{ watchlist }}">
+                </form>
+                {% if close_auction %} 
+                    <form action="{% url 'commerce:close_listing' listing.id %}" method="post">
+                        {% csrf_token %} 
+                        <input class="close-listing" type="submit" value="End Auction">
+                    </form>
+                {% endif %} 
+            {% endif %} 
         </section>
         
         <img class="listing-page-image" src="{{ listing.image }}"/>
@@ -21,7 +29,7 @@
         <form class="bid-form" action="{% url 'commerce:listing' listing.id %}" method="post">
             {% csrf_token %}
             {{ form }}
-            <input class="btn btn-primary bid-button" type="submit" value="Place Bid">
+            <input class="btn btn-primary button-margin" type="submit" value="Place Bid">
         </form>
 
         <section class="listing-details-section">
@@ -30,7 +38,22 @@
                 <li>Listed by: {{ listing_user.username }}</li>
                 <li>Category: {{ category }}</li>
             </ul>
-           
+        </section>
+        <section class="comments-section">
+            <h3><strong>Comments</strong></h3>
+                {% for comment in comments %}
+                    <section class="comment-container">
+                        <article>{{ comment.comment }}</article>
+                        <span class="comment-author">Posted By: {{ comment.user }} at {{ comment.created_at }}</span>
+                    </section>
+                {% endfor %} 
+                {% if not_signed_in == False %}
+                    <form class="form-group" action="{% url 'commerce:add_comment' listing.id %}" method="post">
+                        {% csrf_token %}
+                        {{ comment_form }}
+                        <input type="submit" class="btn btn-primary button-margin" value="Post Comment">
+                    </form>
+                {% endif %} 
         </section>
     </div>
     
